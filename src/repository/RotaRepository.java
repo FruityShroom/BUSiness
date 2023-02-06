@@ -16,7 +16,7 @@ public class RotaRepository
         
         Vector<Rota> rotas = new Vector<>();
         
-        String sql = "SELECT nome, destinos, horarios, quant_onibus FROM bus_iness.rota ORDER BY nome";
+        String sql = "SELECT nome, destinos, horarios, quant_onibus, numero FROM bus_iness.rota ORDER BY nome";
         
         Connection conecBD = FabricaBanco.getConexaoPostgres();
     
@@ -30,7 +30,7 @@ public class RotaRepository
             while (tuplas.next())
             {
                 Rota rota = new Rota(tuplas.getString("nome"), tuplas.getString("destinos"), 
-                        tuplas.getString("horarios"), tuplas.getInt("quant_onibus"));
+                        tuplas.getString("horarios"), tuplas.getInt("quant_onibus"), tuplas.getInt("numero"));
                 rotas.add(rota);
             }
             
@@ -92,6 +92,31 @@ public class RotaRepository
             
         } catch (SQLException ex) 
         {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void updateRota(Rota rota)
+    {
+        
+        String sql = "UPDATE bus_iness.rota SET destinos=?, horarios=?, "
+                + "quant_onibus =?, nome =? WHERE numero=?";
+        
+        Connection conecBD = FabricaBanco.getConexaoPostgres();
+        
+        try {
+            
+            PreparedStatement transacao = conecBD.prepareStatement(sql);
+            
+            transacao.setString(1, rota.getDestinos());
+            transacao.setString(2, rota.getHorarios());
+            transacao.setInt(3, rota.getQuantOnibus());
+            transacao.setString(4, rota.getNome());
+            transacao.setInt(5, rota.getNumero());
+            
+            int tuplasMod = transacao.executeUpdate();
+            
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }

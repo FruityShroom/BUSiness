@@ -27,4 +27,12 @@ public class RotaController
     {
         this.repository.insereNovaRota(novaRota);
     }
+    
+    public void modRota(Rota rota)
+    {
+        if(rota != null && rota.getNumero()!= 0)
+        {
+            repository.updateRota(rota);
+        }
+    }
 }
